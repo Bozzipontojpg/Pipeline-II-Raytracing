@@ -92,7 +92,7 @@ public class RaytracingBase : MonoBehaviour {
 		float normalDotLight = Mathf.Clamp01(Vector3.Dot(raycastHit.normal, lightDirection));
 		Color diffuseColor = normalDotLight * materialColor * light.color * attenuation * shadow;
 
-//		float normalDotView = Mathf.Clamp01(Vector3.Dot());
+    //	float normalDotView = Mathf.Clamp01(Vector3.Dot());
 		Color specularColor;
 
 		return diffuseColor;
