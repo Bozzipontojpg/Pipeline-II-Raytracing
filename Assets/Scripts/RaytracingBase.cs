@@ -15,6 +15,7 @@ public class RaytracingBase : MonoBehaviour {
 
 	float Hnear, Wnear, Hfar, Wfar, aspectRatio;
 
+	
 	void CalculateFrustum(Texture2D texture) {
 		width = texture.width;
 		height = texture.height;
@@ -60,7 +61,22 @@ public class RaytracingBase : MonoBehaviour {
 
 		Material objectMaterial = objectRenderer.material;
 		Vector2 uv = raycastHit.textureCoord;
-
+		//Texture2D tex = (Texture2D)objectRenderer.material.mainTexture;
+		//Texture2D tex = new Texture2D(10,10);
+		Texture tex = objectRenderer.material.mainTexture;
+		Color MyPixel = Color.clear;
+		if(tex != null)
+		{
+			Texture2D text2 = (Texture2D)tex;
+        	Vector2 pixelUV = raycastHit.textureCoord;
+			pixelUV.x *= text2.width;
+        	pixelUV.y *= text2.height;
+			MyPixel = text2.GetPixel((int)pixelUV.x,(int)pixelUV.y);
+		}
+		
+      
+		
+        //tex.SetPixel((int)pixelUV.x, (int)pixelUV.y, Color.black);
 		Color materialColor = objectMaterial.color; // the teacher recommended using a Vector3 instead of a Color
 		float materialSmoothness = objectMaterial.GetFloat("_Glossiness");
 		float materialMetallic = objectMaterial.GetFloat("_Metallic");
@@ -91,11 +107,17 @@ public class RaytracingBase : MonoBehaviour {
 
 		float normalDotLight = Mathf.Clamp01(Vector3.Dot(raycastHit.normal, lightDirection));
 		Color diffuseColor = normalDotLight * materialColor * light.color * attenuation * shadow;
+		if(MyPixel != Color.clear)
+		{
+			diffuseColor *= MyPixel;
+		}
+		
 
 //		float normalDotView = Mathf.Clamp01(Vector3.Dot());
 		Color specularColor;
 
 		return diffuseColor;
+		 
 	}
 
 	void Start() {
@@ -115,7 +137,7 @@ public class RaytracingBase : MonoBehaviour {
 				// Raycast testando colisão com objetos na cena
 
 				Color color = Trace(ray, 0);
-
+				
 				texture.SetPixel(x, y, color);
 			}
 		}
